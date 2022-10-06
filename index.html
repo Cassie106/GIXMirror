@@ -18,23 +18,28 @@
             height: 375px;
             background-color: antiquewhite;
         } */
-        #container {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            border: 1px solid red;
+        /* #container {
+            width: w;
+            height: s;
+        } */
 
-        }
-        /* video {
+        video {
              -webkit-transform: scaleX(-1);
              transform: scaleX(-1);
-        } */
+             /* position: fixed; */
+            right: 0;
+            bottom: 0;
+            /* min-width: 100%; */
+            min-height: 100%;
+        }
     </style>
 </head>
 <body>
     <!-- <h1>Webcam stream</h1> -->
     <div id = "container">
         <video autoplay id="videoElement"></video>
+
+
     </div>
     <script>
         let video = document.querySelector("#videoElement");
@@ -49,6 +54,11 @@
         } else {
             console.log("getUserMedia not supported");
         }
+
+        console.log(window.innerHeight);
+
+        // video.style.height = window.innerHeight + "px";
+        video.style.width = window.innerWidth + "px";
 
         // // Not showing vendor prefixes.
         // navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
