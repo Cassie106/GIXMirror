@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Camera Display</title>
+    <style>
+        h1 {
+            font-family: sans-serif;
+            color: aquamarine;
+        }
+        body {
+            margin: 50px;
+        }
+        #videoElement {
+            width: 500px;
+            height: 375px;
+            background-color: antiquewhite;
+        }
+        #container {
+            margin: 0px auto;
+            width: 500px;
+            height: 375px;
+            border: 10px #333 solid;
+        }
+        video {
+             -webkit-transform: scaleX(-1);
+             transform: scaleX(-1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Webcam stream</h1>
+    <div id = "container">
+        <video autoplay id="videoElement"></video>
+    </div>
+    <script>
+        let video = document.querySelector("#videoElement");
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true})
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(error) {
+                console.log("sth went wrong");
+            })
+        } else {
+            console.log("getUserMedia not supported");
+        }
+
+        // // Not showing vendor prefixes.
+        // navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
+        //     var video = document.querySelector('video');
+        //     video.src = window.URL.createObjectURL(localMediaStream);
+
+        //     // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+        //     // See crbug.com/110938.
+        //     video.onloadedmetadata = function(e) {
+        //     // Ready to go. Do some stuff.
+        //     };
+        // }, onFailSoHard);
+    </script>
+    
+</body>
+</html>
