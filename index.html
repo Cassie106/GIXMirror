@@ -23,26 +23,43 @@
             height: s;
         } */
 
+        body {
+            margin: 0;
+        }
+
+        #container {
+            background-size: cover;
+        }
+
         video {
-             -webkit-transform: scaleX(-1);
-             transform: scaleX(-1);
-             position: fixed;
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            position: fixed;
             right: 0;
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
         }
 
-        body {
-            margin: 0;
+        #draw {
+            align-items: center;
+            object-fit: cover;
+            max-width: 50%;
+            min-height: 50%;
+            margin-top: 45%;
+            margin-left: 20%;
         }
+
     </style>
 </head>
 <body>
     <!-- <h1>Webcam stream</h1> -->
     <div id = "container">
         <video autoplay id="videoElement"></video>
-
+        <img src="./draws/cat.svg" id="draw">
 
     </div>
     <script>
