@@ -18,15 +18,16 @@
         .videoWrapper {
             perspective: 20cm;  /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
             /* height: 100%;  */
-            width: 820px;
+            /* width: 820px; */
         }
 
         video {
             /* -webkit-transform: scaleX(-1);
             z-index: -1; */
-            transform: rotateX(20deg); /* A <angle> giving the angle of rotation around the x-axis. */
+            transform: rotateX(20deg) scaleX(-1) scale(1.5); /* A <angle> giving the angle of rotation around the x-axis. */
             width: 820px;
             object-fit: fill;
+
         }
 
         /* video {
