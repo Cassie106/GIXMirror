@@ -17,41 +17,31 @@
 
 
         .videoWrapper {
-            perspective: 20cm; 
+            perspective: 20cm;
             /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
-            text-align: center;
+                top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+                text-align: center;
             overflow: hidden;
+
         }
 
         video {
             position: relative;
             top: -10%;
-            transform: rotateX(20deg) scaleX(-1) scale(1.2); 
+            transform: rotateX(20deg) scaleX(-1) scale(2.5);
         }
 
 
-        /* video {
-            -webkit-transform: scaleX(-1);
-            
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -1;
-            transform: scale(-2.5, 2.6);
-        } */
-
         #draw {
             position: absolute;
-            /* opacity: 0.5;
-            align-items: center;
-            object-fit: cover;
-            max-width: 50%;
-            min-height: 50%;
-            margin-top: 45%;
-            margin-left: 20%; */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.5;
+            width: 80%;
         }
 
 
@@ -104,7 +94,7 @@
 <body>
     <!-- <h1>Webcam stream</h1> -->
     <div id="container">
-            
+
 
         <div class="videoWrapper">
             <!-- <iframe autoplay id="videoElement" allow="camera;"> -->
@@ -112,7 +102,7 @@
             <!-- </iframe> -->
         </div>
 
-        <div>
+        <div class="drawWrapper">
             <img src="./draws/cat1.svg" id="draw">
         </div>
         <button class="button btnImg1" onclick="changeImg('./draws/house.svg')">house</button>
