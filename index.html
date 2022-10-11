@@ -1,28 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Camera Display</title>
     <style>
-        /* h1 {
-            font-family: sans-serif;
-            color: aquamarine;
-        }
-        body {
-            margin: 50px;
-        }
-        #videoElement {
-            width: 500px;
-            height: 375px;
-            background-color: antiquewhite;
-        } */
-        /* #container {
-            width: w;
-            height: s;
-        } */
-
         body {
             margin: 0;
         }
@@ -30,6 +14,10 @@
         #container {
             background-size: cover;
         }
+
+        /* .videoWrapper{
+            perspective: 150px;
+        } */
 
         video {
             -webkit-transform: scaleX(-1);
@@ -42,8 +30,10 @@
             height: auto;
             z-index: -1;
             transform: scale(-2.5, 2.6);
+            /* transform: rotateX(30deg); */
+            
         }
-
+        
         #draw {
             opacity: 0.5;
             align-items: center;
@@ -54,37 +44,57 @@
             margin-left: 20%;
         }
 
-        button { 
-            background-color: #4CAF50; /* Green */
+
+        .button {
+            background-color: #e7e7e7;
+            /* Green */
             border: none;
-            color: white;
+            color: black;
             padding: 15px 32px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
+            border-radius: 10px;
+            margin: 20px 2px;
         }
 
+        .btnSave {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
     </style>
 </head>
+
 <body>
     <!-- <h1>Webcam stream</h1> -->
-    <div id = "container">
-        <video autoplay id="videoElement"></video>
-        <img src="./draws/cat.svg" id="draw">
-        <button>Save</button>
+    <div id="container">
+        <button class="button btnImg" onclick="changeImg('./draws/house.svg')">house</button>
+        <button class="button btnImg" onclick="changeImg('./draws/cat1.svg')">cat1</button>
+        <button class="button btnImg" onclick="changeImg('./draws/cat2.svg')">cat2</button>
+        <button class="button btnImg" onclick="changeImg('./draws/pear.svg')">pear</button>
+
+        <div class="videoWrapper">
+            <video autoplay id="videoElement"></video>
+        </div>
+
+        <div>
+            <img src="./draws/cat1.svg" id="draw">
+        </div>
+        <button class="button btnSave">Save</button>
     </div>
 
     <script>
         let video = document.querySelector("#videoElement");
         if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true})
-            .then(function(stream) {
-                video.srcObject = stream;
-            })
-            .catch(function(error) {
-                console.log("sth went wrong");
-            })
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.log("sth went wrong");
+                })
         } else {
             console.log("getUserMedia not supported");
         }
@@ -94,18 +104,14 @@
         // video.style.height = window.innerHeight + "px";
         video.style.width = window.innerWidth + "px";
 
-        // // Not showing vendor prefixes.
-        // navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
-        //     var video = document.querySelector('video');
-        //     video.src = window.URL.createObjectURL(localMediaStream);
+        // function to  change image
+        function changeImg(ImageUrl) {
+            document.getElementById("draw").src = ImageUrl;
+        }
 
-        //     // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-        //     // See crbug.com/110938.
-        //     video.onloadedmetadata = function(e) {
-        //     // Ready to go. Do some stuff.
-        //     };
-        // }, onFailSoHard);
+
     </script>
-    
+
 </body>
+
 </html>
