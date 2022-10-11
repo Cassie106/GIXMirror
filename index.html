@@ -19,11 +19,11 @@
         .videoWrapper {
             perspective: 20cm;
             /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
-                top: 0;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-                text-align: center;
+            text-align: center;
             overflow: hidden;
 
         }
@@ -42,6 +42,7 @@
             transform: translate(-50%, -50%);
             opacity: 0.5;
             width: 80%;
+            max-height: 80%;
         }
 
 
@@ -65,27 +66,9 @@
             bottom: 20px;
         }
 
-        .btnImg1 {
+        .btnImg {
             position: absolute;
             left: 20px;
-            top: 20px;
-        }
-
-        .btnImg2 {
-            position: absolute;
-            left: 120px;
-            top: 20px;
-        }
-
-        .btnImg3 {
-            position: absolute;
-            left: 220px;
-            top: 20px;
-        }
-
-        .btnImg4 {
-            position: absolute;
-            left: 320px;
             top: 20px;
         }
     </style>
@@ -94,8 +77,6 @@
 <body>
     <!-- <h1>Webcam stream</h1> -->
     <div id="container">
-
-
         <div class="videoWrapper">
             <!-- <iframe autoplay id="videoElement" allow="camera;"> -->
             <video autoplay id="videoElement"></video>
@@ -103,14 +84,22 @@
         </div>
 
         <div class="drawWrapper">
-            <img src="./draws/cat1.svg" id="draw">
+            <img src="./draws/dog.svg" id="draw">
         </div>
-        <button class="button btnImg1" onclick="changeImg('./draws/house.svg')">house</button>
-        <button class="button btnImg2" onclick="changeImg('./draws/cat1.svg')">cat1</button>
-        <button class="button btnImg3" onclick="changeImg('./draws/cat2.svg')">cat2</button>
-        <button class="button btnImg4" onclick="changeImg('./draws/pear.svg')">pear</button>
-        <button class="button btnSave">Save</button>
+
+        <div class="btnImg">
+            <button class="button btnImg1" onclick="changeImg('./draws/house.svg')">house</button>
+            <button class="button btnImg2" onclick="changeImg('./draws/cat.svg')">cat</button>
+            <button class="button btnImg3" onclick="changeImg('./draws/dog.svg')">dog</button>
+            <button class="button btnImg4" onclick="changeImg('./draws/pear.svg')">pear</button>
+            <button class="button btnImg5" onclick="changeImg('./draws/flower.svg')">flower</button>
+            <button class="button btnImg6" onclick="changeImg('./draws/challenge.svg')">challenge</button>
+        </div>
+        <button class="button btnSave" onclick="saveImg()">Save</button>
     </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         let video = document.querySelector("#videoElement");
@@ -140,7 +129,14 @@
         }
 
 
+        // function to save image
+        function saveImg() {
+            html2pdf(video);
+        }
+
     </script>
+
+
 
 </body>
 
