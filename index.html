@@ -15,13 +15,20 @@
             background-size: cover;
         }
 
+
         .videoWrapper {
-            perspective: 20cm;  /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
+            perspective: 20cm; 
+            /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
+            text-align: center;
+            overflow: hidden;
         }
 
         video {
-            transform: rotateX(20deg) scaleX(-1) scale(1.2) translate(0,-100px); /* A <angle> giving the angle of rotation around the x-axis. */
+            position: relative;
+            top: -10%;
+            transform: rotateX(20deg) scaleX(-1) scale(1.2); 
         }
+
 
         /* video {
             -webkit-transform: scaleX(-1);
@@ -38,13 +45,13 @@
 
         #draw {
             position: absolute;
-            opacity: 0.5;
+            /* opacity: 0.5;
             align-items: center;
             object-fit: cover;
             max-width: 50%;
             min-height: 50%;
             margin-top: 45%;
-            margin-left: 20%;
+            margin-left: 20%; */
         }
 
 
@@ -67,16 +74,37 @@
             right: 20px;
             bottom: 20px;
         }
+
+        .btnImg1 {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
+
+        .btnImg2 {
+            position: absolute;
+            left: 120px;
+            top: 20px;
+        }
+
+        .btnImg3 {
+            position: absolute;
+            left: 220px;
+            top: 20px;
+        }
+
+        .btnImg4 {
+            position: absolute;
+            left: 320px;
+            top: 20px;
+        }
     </style>
 </head>
 
 <body>
     <!-- <h1>Webcam stream</h1> -->
     <div id="container">
-        <button class="button btnImg" onclick="changeImg('./draws/house.svg')">house</button>
-        <button class="button btnImg" onclick="changeImg('./draws/cat1.svg')">cat1</button>
-        <button class="button btnImg" onclick="changeImg('./draws/cat2.svg')">cat2</button>
-        <button class="button btnImg" onclick="changeImg('./draws/pear.svg')">pear</button>
+            
 
         <div class="videoWrapper">
             <!-- <iframe autoplay id="videoElement" allow="camera;"> -->
@@ -87,6 +115,10 @@
         <div>
             <img src="./draws/cat1.svg" id="draw">
         </div>
+        <button class="button btnImg1" onclick="changeImg('./draws/house.svg')">house</button>
+        <button class="button btnImg2" onclick="changeImg('./draws/cat1.svg')">cat1</button>
+        <button class="button btnImg3" onclick="changeImg('./draws/cat2.svg')">cat2</button>
+        <button class="button btnImg4" onclick="changeImg('./draws/pear.svg')">pear</button>
         <button class="button btnSave">Save</button>
     </div>
 
@@ -105,8 +137,11 @@
             console.log("getUserMedia not supported");
         }
 
-        // // video.style.height = window.innerHeight + "px";
+        // video.style.height = window.innerHeight + "px";
         video.style.width = window.innerWidth + "px";
+
+        let videoWrapper = document.querySelector(".videoWrapper");
+        videoWrapper.style.height = window.innerHeight + "px";
 
 
         // function to  change image
