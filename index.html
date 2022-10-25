@@ -83,7 +83,7 @@
     <div class="videoList">
         <div class="video">
             <canvas id="c3" width="240" height="320"></canvas>
-            <div>5-point Color</div>
+            <div id="colorsText">5-point Color</div>
         </div>
         <div class="video">
             <canvas id="c4" width="240" height="320"></canvas>
@@ -99,6 +99,7 @@
         // Put variables in global scope to make them available to the browser console.
         const video = document.querySelector('video');
         const resText = document.getElementById('resText');
+        const colorsText = document.getElementById('colorsText');
         const c1 = document.getElementById('c1');
         const ctx1 = c1.getContext('2d');
         const c2 = document.getElementById('c2');
@@ -152,20 +153,18 @@
             const $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
-                    ctx1.drawImage($this, 0, 0, 200, 300);
+                    ctx1.drawImage($this, 0, 0, 240, 320);
 
-                    let imageData = flipImage(ctx1.getImageData(0, 0, 200, 300));
+                    let imageData = flipImage(ctx1.getImageData(0, 0, 240, 320));
 
                     ctx2.putImageData(imageData, 0, 0);
 
-                    ctx3.putImageData(imageData, 0, 0);
-                    // ct3.onload = function () {
-                    //     ctx3.beginPath();
-                    //     ctx3.moveTo(0, 0);
-                    //     ctx3.lineTo(200, 150);
-                    //     ctx3.stroke();
-                    // }
+                    // console.log('height:' + imageData.height + ' width:' + imageData.width);
 
+        
+                    ctx3.putImageData(imageData, 0, 0);
+                    let colors = getColors(imageData);
+                    colorsText.innerHTML = `5-point Color<br /> (${colors[0]})<br /> (${colors[1]})<br /> (${colors[2]})<br /> (${colors[3]})<br /> (${colors[4]})`;
 
                     ctx4.putImageData(imageData, 0, 0);
                     ctx5.putImageData(imageData, 0, 0);
@@ -207,6 +206,20 @@
                 }
             }
             return imageData;
+        }
+
+        function getColors(imageData) {
+            let colors = [];
+            let data = imageData.data;
+            for (let i = 2; i <= 6; i += 1) {
+                point = []
+                startIndex = (imageData.width * imageData.height / 2 + i * imageData.width / 8) * 4 ;
+                for (j = 0; j < 3; j++) {
+                    point.push(data[startIndex + j]);
+                }
+                colors.push(point);
+            }
+            return colors;
         }
     </script>
 </body>
