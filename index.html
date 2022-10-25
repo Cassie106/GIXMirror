@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
     <style>
+
+        body {
+            text-align: center;
+        }
+
         .button {
             background-color: #e7e7e7;
             border: none;
@@ -18,6 +23,22 @@
             font-size: 16px;
             border-radius: 10px;
             margin: 20px 2px;
+        }
+
+        .videoWrapper {
+            perspective: 20cm;
+            /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
+            /* top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; */
+            /* text-align: center; */
+            overflow: hidden;
+        }
+
+        #c2 {
+            position: relative;
+            transform: rotateX(20deg) scaleX(-1);
         }
     </style>
 </head>
@@ -40,16 +61,28 @@
     <h1>Optical Correction</h1>
     <video autoplay width="200" height="auto"></video>
     <div id="resText"></div>
+    <canvas id="c1" width="200" height="auto"></canvas>
+    <div>Video to canvas (30fps)</div>
+
+    <div class="videoWrapper">
+        <canvas id="c2" width="200" height="auto"></canvas>
+    </div>
+
 
     <script>
         // Put variables in global scope to make them available to the browser console.
         const video = document.querySelector('video');
         const resText = document.getElementById('resText');
+        const c1 = document.getElementById('c1');
+        const ctx1 = c1.getContext('2d');
+        const c2 = document.getElementById('c2');
+        const ctx2 = c2.getContext('2d');
+
         const constraints = {
             audio: false,
             video: {
-                width: { ideal: 480 },
-                height: { ideal: 640 }
+                width: { ideal: 640 },
+                height: { ideal: 480 }
             }
         };
 
@@ -64,7 +97,7 @@
                 video.srcObject = stream;
 
                 let stream_settings = videoTracks[0].getSettings();
-                resText.textContent = `Original front camera resolution: ${stream_settings.width}x${stream_settings.height}`;
+                resText.textContent = `Camera Stream (${stream_settings.width}x${stream_settings.height})`;
             })
             .catch((error) => {
                 if (error.name === 'ConstraintNotSatisfiedError') {
@@ -81,6 +114,32 @@
                     console.error(`getUserMedia error: ${error.name}`, error);
                 }
             });
+
+
+        video.addEventListener('play', function () {
+            const $this = this; //cache
+            (function loop() {
+                if (!$this.paused && !$this.ended) {
+                    ctx1.drawImage($this, 0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
+                    ctx2.drawImage($this, 0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
+                    let imgData = ctx1.getImageData(0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
+                    let data = imgData.data;
+                    for (let i = 0; i < data.length; i += 4) {
+                        let r = data[i];
+                        let g = data[i + 1];
+                        let b = data[i + 2];
+                        let a = data[i + 3];
+                        let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                        data[i] = gray;
+                        data[i + 1] = gray;
+                        data[i + 2] = gray;
+                        data[i + 3] = a;
+                    }
+                    ctx2.putImageData(imgData, 0, 0);
+                    setTimeout(loop, 1000 / 30); // drawing at 30fps
+                }
+            })();
+        }, 0);
     </script>
 </body>
 
