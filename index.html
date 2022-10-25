@@ -45,7 +45,10 @@
         const resText = document.getElementById('resText');
         const constraints = {
             audio: false,
-            video: true
+            video: {
+                width: {ideal: 640},
+                height: {ideal: 480}
+            }
         };
 
         navigator.mediaDevices.getUserMedia(constraints)
