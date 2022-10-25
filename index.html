@@ -24,30 +24,32 @@
 
 <body>
     <h1>Activity List</h1>
-    <button class="button" onClick="window.location.href='./activity/masterpiece';">  
-        Masterpiece
-     </button> 
-     <button class="button" onClick="window.location.href='./activity/calculation';">  
-        Calculation
-     </button> 
-     <button class="button" onClick="window.location.href='./activity/colormatching';">  
-        Color Matching
-     </button> 
+    <div class="buttonList">
+        <button class="button" onClick="window.location.href='./activity/masterpiece';">
+            Masterpiece
+        </button>
+        <button class="button" onClick="window.location.href='./activity/calculation';">
+            Calculation
+        </button>
+        <button class="button" onClick="window.location.href='./activity/colormatching';">
+            Color Matching
+        </button>
+    </div>
 
 
-     <h1>Optical Correction</h1>
-     <video autoplay width="200" height="auto"></video>
-     <div id="resText"></div>
+    <h1>Optical Correction</h1>
+    <video autoplay width="200" height="auto"></video>
+    <div id="resText"></div>
 
-     <script>
+    <script>
         // Put variables in global scope to make them available to the browser console.
         const video = document.querySelector('video');
         const resText = document.getElementById('resText');
         const constraints = {
             audio: false,
             video: {
-                width: {ideal: 640},
-                height: {ideal: 480}
+                width: { ideal: 480 },
+                height: { ideal: 640 }
             }
         };
 
