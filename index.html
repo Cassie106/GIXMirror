@@ -120,9 +120,9 @@
             const $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
-                    ctx1.drawImage($this, 0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
-                    ctx2.drawImage($this, 0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
-                    let imgData = ctx1.getImageData(0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
+                    ctx1.drawImage($this, 0, 0, 200, 200);
+                    ctx2.drawImage($this, 0, 0, 200, 200);
+                    let imgData = ctx1.getImageData(0, 0, 200, 200);
                     let data = imgData.data;
                     for (let i = 0; i < data.length; i += 4) {
                         let r = data[i];
