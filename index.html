@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
     <style>
-
         body {
             text-align: center;
         }
@@ -25,21 +24,28 @@
             margin: 20px 2px;
         }
 
-        .videoWrapper {
-            perspective: 20cm;
-            /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
-            /* top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%; */
-            /* text-align: center; */
-            overflow: hidden;
+        .videoList {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            /* padding: 10px; */
         }
 
-        #c2 {
+        .video {
+            margin: 10px;
+        }
+
+
+
+        /* .videoWrapper {
+            perspective: 20cm;
+            overflow: hidden;
+        } */
+
+        /* #c2 {
             position: relative;
             transform: rotateX(20deg) scaleX(-1);
-        }
+        } */
     </style>
 </head>
 
@@ -59,15 +65,35 @@
 
 
     <h1>Optical Correction</h1>
-    <video autoplay width="200" height="auto"></video>
-    <div id="resText"></div>
-    <canvas id="c1" width="200" height="auto"></canvas>
-    <div>Video to canvas (30fps)</div>
-
-    <div class="videoWrapper">
-        <canvas id="c2" width="200" height="auto"></canvas>
+    <div class="videoList">
+        <div class="video">
+            <video autoplay width="240" height="320"></video>
+            <div id="resText"></div>
+        </div>
+        <div class="video">
+            <canvas id="c1" width="240" height="320"></canvas>
+            <div>Stream to canvas (30fps)</div>
+        </div>
+        <div class="video">
+            <canvas id="c2" width="240" height="320"></canvas>
+            <div>Horizontal Flip Stream</div>
+        </div>
     </div>
 
+    <div class="videoList">
+        <div class="video">
+            <canvas id="c3" width="240" height="320"></canvas>
+            <div>5-point Color</div>
+        </div>
+        <div class="video">
+            <canvas id="c4" width="240" height="320"></canvas>
+            <div>Text Recognition</div>
+        </div>
+        <div class="video">
+            <canvas id="c5" width="240" height="320"></canvas>
+            <div>Temp Stream</div>
+        </div>
+    </div>
 
     <script>
         // Put variables in global scope to make them available to the browser console.
@@ -77,6 +103,12 @@
         const ctx1 = c1.getContext('2d');
         const c2 = document.getElementById('c2');
         const ctx2 = c2.getContext('2d');
+        const c3 = document.getElementById('c3');
+        const ctx3 = c3.getContext('2d');
+        const c4 = document.getElementById('c4');
+        const ctx4 = c4.getContext('2d');
+        const c5 = document.getElementById('c5');
+        const ctx5 = c5.getContext('2d');
 
         const constraints = {
             audio: false,
@@ -120,26 +152,62 @@
             const $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
-                    ctx1.drawImage($this, 0, 0, 200, 200);
-                    ctx2.drawImage($this, 0, 0, 200, 200);
-                    let imgData = ctx1.getImageData(0, 0, 200, 200);
-                    let data = imgData.data;
-                    for (let i = 0; i < data.length; i += 4) {
-                        let r = data[i];
-                        let g = data[i + 1];
-                        let b = data[i + 2];
-                        let a = data[i + 3];
-                        let gray = 0.299 * r + 0.587 * g + 0.114 * b;
-                        data[i] = gray;
-                        data[i + 1] = gray;
-                        data[i + 2] = gray;
-                        data[i + 3] = a;
-                    }
-                    ctx2.putImageData(imgData, 0, 0);
+                    ctx1.drawImage($this, 0, 0, 200, 300);
+
+                    let imageData = flipImage(ctx1.getImageData(0, 0, 200, 300));
+
+                    ctx2.putImageData(imageData, 0, 0);
+
+                    ctx3.putImageData(imageData, 0, 0);
+                    // ct3.onload = function () {
+                    //     ctx3.beginPath();
+                    //     ctx3.moveTo(0, 0);
+                    //     ctx3.lineTo(200, 150);
+                    //     ctx3.stroke();
+                    // }
+
+
+                    ctx4.putImageData(imageData, 0, 0);
+                    ctx5.putImageData(imageData, 0, 0);
+
+
+                    // let imgData = ctx1.getImageData(0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
+                    // let data = imgData.data;
+                    // for (let i = 0; i < data.length; i += 4) {
+                    //     let r = data[i];
+                    //     let g = data[i + 1];
+                    //     let b = data[i + 2];
+                    //     let a = data[i + 3];
+                    //     let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    //     data[i] = gray;
+                    //     data[i + 1] = gray;
+                    //     data[i + 2] = gray;
+                    //     data[i + 3] = a;
+                    // }
+                    // ctx2.putImageData(imgData, 0, 0);
+
+
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
         }, 0);
+
+        function flipImage(imageData) {
+            // Traverse every row and flip the pixels
+            for (i = 0; i < imageData.height; i++) {
+                // We only need to do half of every row since we're flipping the halves
+                for (j = 0; j < imageData.width / 2; j++) {
+                    var index = (i * 4) * imageData.width + (j * 4);
+                    var mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+                    for (p = 0; p < 4; p++) {
+                        var temp = imageData.data[index + p];
+                        imageData.data[index + p] = imageData.data[mirrorIndex + p];
+                        imageData.data[mirrorIndex + p] = temp;
+                    }
+                }
+            }
+            return imageData;
+        }
     </script>
 </body>
 
