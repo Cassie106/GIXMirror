@@ -7,13 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
     <style>
-        body {
-            margin: 0;
-        }
-
         .button {
             background-color: #e7e7e7;
-            /* Green */
             border: none;
             color: black;
             padding: 15px 32px;
@@ -24,14 +19,11 @@
             border-radius: 10px;
             margin: 20px 2px;
         }
-
     </style>
 </head>
 
 <body>
-    <h1>
-        Choose a activity
-    </h1>
+    <h1>Activity List</h1>
     <button class="button" onClick="window.location.href='./activity/masterpiece';">  
         Masterpiece
      </button> 
@@ -41,6 +33,50 @@
      <button class="button" onClick="window.location.href='./activity/colormatching';">  
         Color Matching
      </button> 
+
+
+     <h1>Optical Correction</h1>
+     <video autoplay width="200" height="auto"></video>
+     <div id="resText"></div>
+
+     <script>
+        // Put variables in global scope to make them available to the browser console.
+        const video = document.querySelector('video');
+        const resText = document.getElementById('resText');
+        const constraints = {
+            audio: false,
+            video: true
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                const videoTracks = stream.getVideoTracks();
+                console.log('Got stream with constraints:', constraints);
+                console.log(`Using video device: ${videoTracks[0].label}`);
+                stream.onremovetrack = () => {
+                    console.log('Stream ended');
+                };
+                video.srcObject = stream;
+
+                let stream_settings = videoTracks[0].getSettings();
+                resText.textContent = `Original front camera resolution: ${stream_settings.width}x${stream_settings.height}`;
+            })
+            .catch((error) => {
+                if (error.name === 'ConstraintNotSatisfiedError') {
+                    console.error(
+                        `The resolution ${constraints.video.width.exact}x${constraints.video.height.exact} px is not supported by your device.`
+                    );
+                } else if (error.name === 'PermissionDeniedError') {
+                    console.error(
+                        'Permissions have not been granted to use your camera and ' +
+                        'microphone, you need to allow the page access to your devices in ' +
+                        'order for the demo to work.'
+                    );
+                } else {
+                    console.error(`getUserMedia error: ${error.name}`, error);
+                }
+            });
+    </script>
 </body>
 
 </html>
