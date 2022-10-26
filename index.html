@@ -64,7 +64,7 @@
     </div>
 
 
-    <h1>Optical Correction</h1>
+    <h1>Video Stream Processing</h1>
     <div class="videoList">
         <div class="video">
             <video autoplay width="240" height="320"></video>
@@ -83,7 +83,12 @@
     <div class="videoList">
         <div class="video">
             <canvas id="c3" width="240" height="320"></canvas>
-            <div id="colorsText">5-point Color</div>
+            <div >5-point Color</div>
+            <div id="colorText1"></div>
+            <div id="colorText2"></div>
+            <div id="colorText3"></div>
+            <div id="colorText4"></div>
+            <div id="colorText5"></div>
         </div>
         <div class="video">
             <canvas id="c4" width="240" height="320"></canvas>
@@ -99,7 +104,13 @@
         // Put variables in global scope to make them available to the browser console.
         const video = document.querySelector('video');
         const resText = document.getElementById('resText');
-        const colorsText = document.getElementById('colorsText');
+
+        const colorText1 = document.getElementById('colorText1');
+        const colorText2 = document.getElementById('colorText2');
+        const colorText3 = document.getElementById('colorText3');
+        const colorText4 = document.getElementById('colorText4');
+        const colorText5 = document.getElementById('colorText5');
+
         const c1 = document.getElementById('c1');
         const ctx1 = c1.getContext('2d');
         const c2 = document.getElementById('c2');
@@ -164,7 +175,19 @@
         
                     ctx3.putImageData(imageData, 0, 0);
                     let colors = getColors(imageData);
-                    colorsText.innerHTML = `5-point Color<br /> (${colors[0]})<br /> (${colors[1]})<br /> (${colors[2]})<br /> (${colors[3]})<br /> (${colors[4]})`;
+
+                    // colorsText.innerHTML = `5-point Color<br /> (${colors[0]})<br /> (${colors[1]})<br /> (${colors[2]})<br /> (${colors[3]})<br /> (${colors[4]})`;
+                    colorText1.textContent = `◼(${colors[0]})`;
+                    colorText1.style.color = '#'+colors[0][0].toString(16) + colors[0][1].toString(16) + colors[0][2].toString(16);
+                    colorText2.textContent = `◼(${colors[1]})`;
+                    colorText2.style.color = '#'+colors[1][0].toString(16) + colors[1][1].toString(16) + colors[1][2].toString(16);
+                    colorText3.textContent = `◼(${colors[2]})`;
+                    colorText3.style.color = '#'+colors[2][0].toString(16) + colors[2][1].toString(16) + colors[2][2].toString(16);
+                    colorText4.textContent = `◼(${colors[3]})`;
+                    colorText4.style.color = '#'+colors[3][0].toString(16) + colors[3][1].toString(16) + colors[3][2].toString(16);
+                    colorText5.textContent = `◼(${colors[4]})`;
+                    colorText5.style.color = '#'+colors[4][0].toString(16) + colors[4][1].toString(16) + colors[4][2].toString(16);
+                    
 
                     ctx4.putImageData(imageData, 0, 0);
                     ctx5.putImageData(imageData, 0, 0);
@@ -187,7 +210,7 @@
 
 
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
-                }
+                } 
             })();
         }, 0);
 
