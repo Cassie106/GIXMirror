@@ -229,7 +229,8 @@
                     if (colors[2][0]>=colorLowerBound[givenColorIndex][0] && colors[2][0]<=colorUpperBound[givenColorIndex][0] && colors[2][1]>=colorLowerBound[givenColorIndex][1] && colors[2][1]<=colorUpperBound[givenColorIndex][1] && colors[2][2]>=colorLowerBound[givenColorIndex][2] && colors[2][2]<=colorUpperBound[givenColorIndex][2]) {
                         check3.style.visibility = "visible";
                         console.log("The color is correct");
-                        newRound()
+                        //one second delay after answer is correct
+                        setTimeout(newRound, 1000);
                         // TODO: Should be replaced with a function that moves to the next level
                     } else {
                         check3.style.visibility = "hidden";
