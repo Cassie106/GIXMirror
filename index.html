@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
+    <script src='https://unpkg.com/tesseract.js@3.0.3/dist/tesseract.min.js'></script>
     <style>
         body {
             text-align: center;
@@ -92,7 +93,7 @@
         </div>
         <div class="video">
             <canvas id="c4" width="240" height="320"></canvas>
-            <div>Text Recognition</div>
+            <div id="messages">Text Recognition</div>
         </div>
         <div class="video">
             <canvas id="c5" width="240" height="320"></canvas>
@@ -190,22 +191,6 @@
                     ctx5.putImageData(imageData, 0, 0);
 
 
-                    // let imgData = ctx1.getImageData(0, 0, 200, 200 * $this.videoHeight / $this.videoWidth);
-                    // let data = imgData.data;
-                    // for (let i = 0; i < data.length; i += 4) {
-                    //     let r = data[i];
-                    //     let g = data[i + 1];
-                    //     let b = data[i + 2];
-                    //     let a = data[i + 3];
-                    //     let gray = 0.299 * r + 0.587 * g + 0.114 * b;
-                    //     data[i] = gray;
-                    //     data[i + 1] = gray;
-                    //     data[i + 2] = gray;
-                    //     data[i + 3] = a;
-                    // }
-                    // ctx2.putImageData(imgData, 0, 0);
-
-
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
@@ -242,18 +227,56 @@
             return colors;
         }
 
-        // import Tesseract from 'tesseract.js';
+        const { createWorker, createScheduler } = Tesseract;
+        const scheduler = createScheduler();
+        const messages = document.getElementById('messages');
+        let timerId = null;
 
-        // Tesseract.recognize(
-        //     'https://tesseract.projectnaptha.com/img/eng_bw.png',
-        //     'eng',
-        //     { logger: m => console.log(m) }
-        // ).then(({ data: { text } }) => {
-        //     console.log(text);
-        // })
+        const addMessage = (m, bold) => {
+            let msg = `<p>${m}</p>`;
+            if (bold) {
+                msg = `<p class="bold">${m}</p>`;
+            }
+            messages.innerHTML += msg;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        const doOCR = async () => {
+            const c = document.createElement('canvas');
+            c.width = 640;
+            c.height = 480;
+            c.getContext('2d').drawImage(video, 0, 0, 240, 320);
+            const start = new Date();
+            const { data: { text } } = await scheduler.addJob('recognize', c);
+            const end = new Date()
+            addMessage(`[${start.getMinutes()}:${start.getSeconds()} - ${end.getMinutes()}:${end.getSeconds()}], ${(end - start) / 1000} s`);
+            text.split('\n').forEach((line) => {
+                addMessage(line);
+            });
+        };
+
+        (async () => {
+            addMessage('Initializing Tesseract.js ...');
+            for (let i = 0; i < 4; i++) {
+                const worker = createWorker();
+                await worker.load();
+                await worker.loadLanguage('eng');
+                await worker.initialize('eng');
+                scheduler.addWorker(worker);
+            }
+            addMessage('Initialized');
+            video.addEventListener('play', () => {
+                timerId = setInterval(doOCR, 1000);
+            });
+            video.addEventListener('pause', () => {
+                clearInterval(timerId);
+            });
+            addMessage('Now you can play the video. :)');
+            video.controls = true;
+        })();
     </script>
 
-    
+
 </body>
 
 </html>
