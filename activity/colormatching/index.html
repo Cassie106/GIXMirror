@@ -37,7 +37,7 @@
 
         .colorWrapper {
             position: absolute;
-            top: 20%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
@@ -76,36 +76,41 @@
             <div class="colorContainer">
                 <div>
                     <div>
-                        <img class=“colorItem” src="./colordots/empty.svg" id="color1" height="150px" width="150px">
+                        <img class=“colorItem” src="./colordots/placeholder.svg" id="color1" height="150px" width="150px">
                     </div>
+                    <img class=“placeLocation” src="./colordots/empty.svg" height="150px" width="150px">
                     <img class="checkmark" src="./colordots/checkmark.svg" id="check1" height="150px" width="150px">
                 </div>
 
                 <div>
                     <div>
-                        <img class=“colorItem” src="./colordots/empty.svg" id="color2" height="150px" width="150px">
+                        <img class=“colorItem” src="./colordots/placeholder.svg" id="color2" height="150px" width="150px">
                     </div>
+                    <img class=“placeLocation” src="./colordots/empty.svg" height="150px" width="150px">
                     <img class="checkmark" src="./colordots/checkmark.svg" id="check2" height="150px" width="150px">
                 </div>
 
                 <div>
                     <div>
-                        <img class=“colorItem” src="./colordots/empty.svg" id="color3" height="150px" width="150px">
+                        <img class=“colorItem” src="./colordots/placeholder.svg" id="color3" height="150px" width="150px">
                     </div>
+                    <img class=“placeLocation” src="./colordots/empty.svg" height="150px" width="150px">
                     <img class="checkmark" src="./colordots/checkmark.svg" id="check3" height="150px" width="150px">
                 </div>
 
                 <div>
                     <div>
-                        <img class=“colorItem” src="./colordots/empty.svg" id="color4" height="150px" width="150px">
+                        <img class=“colorItem” src="./colordots/placeholder.svg" id="color4" height="150px" width="150px">
                     </div>
+                    <img class=“placeLocation” src="./colordots/empty.svg" height="150px" width="150px">
                     <img class="checkmark" src="./colordots/checkmark.svg" id="check4" height="150px" width="150px">
                 </div>
 
                 <div>
                     <div>
-                        <img class=“colorItem” src="./colordots/empty.svg" id="color5" height="150px" width="150px">
+                        <img class=“colorItem” src="./colordots/placeholder.svg" id="color5" height="150px" width="150px">
                     </div>
+                    <img class=“placeLocation” src="./colordots/empty.svg" height="150px" width="150px">
                     <img class="checkmark" src="./colordots/checkmark.svg" id="check5" height="150px" width="150px">
                 </div>
 
@@ -217,6 +222,8 @@
                     if (colors[2][0]>=colorLowerBound[givenColorIndex][0] && colors[2][0]<=colorUpperBound[givenColorIndex][0] && colors[2][1]>=colorLowerBound[givenColorIndex][1] && colors[2][1]<=colorUpperBound[givenColorIndex][1] && colors[2][2]>=colorLowerBound[givenColorIndex][2] && colors[2][2]<=colorUpperBound[givenColorIndex][2]) {
                         check3.style.visibility = "visible";
                         console.log("The color is correct");
+                        location.reload();
+                        // TODO: Should be replaced with a function that moves to the next level
                     } else {
                         check3.style.visibility = "hidden";
                     }
