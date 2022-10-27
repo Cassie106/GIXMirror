@@ -35,18 +35,6 @@
         .video {
             margin: 10px;
         }
-
-
-
-        /* .videoWrapper {
-            perspective: 20cm;
-            overflow: hidden;
-        } */
-
-        /* #c2 {
-            position: relative;
-            transform: rotateX(20deg) scaleX(-1);
-        } */
     </style>
 </head>
 
@@ -94,6 +82,7 @@
         <div class="video">
             <canvas id="c4" width="240" height="320"></canvas>
             <div id="messages">Text Recognition</div>
+            <div id="recognizedText"></div>
         </div>
         <div class="video">
             <canvas id="c5" width="240" height="320"></canvas>
@@ -230,15 +219,12 @@
         const { createWorker, createScheduler } = Tesseract;
         const scheduler = createScheduler();
         const messages = document.getElementById('messages');
+        const recognizedText = document.getElementById('recognizedText');
         let timerId = null;
 
-        const addMessage = (m, bold) => {
+        const addMessage = (m) => {
             let msg = `<p>${m}</p>`;
-            if (bold) {
-                msg = `<p class="bold">${m}</p>`;
-            }
             messages.innerHTML += msg;
-            messages.scrollTop = messages.scrollHeight;
         }
 
         const doOCR = async () => {
@@ -246,13 +232,9 @@
             c.width = 640;
             c.height = 480;
             c.getContext('2d').drawImage(video, 0, 0, 240, 320);
-            const start = new Date();
+
             const { data: { text } } = await scheduler.addJob('recognize', c);
-            const end = new Date()
-            addMessage(`[${start.getMinutes()}:${start.getSeconds()} - ${end.getMinutes()}:${end.getSeconds()}], ${(end - start) / 1000} s`);
-            text.split('\n').forEach((line) => {
-                addMessage(line);
-            });
+            recognizedText.innerHTML = text;
         };
 
         (async () => {
@@ -262,17 +244,13 @@
                 await worker.load();
                 await worker.loadLanguage('eng');
                 await worker.initialize('eng');
+                await worker.setParameters({
+                    tessedit_char_whitelist: '0123456789',
+                });
                 scheduler.addWorker(worker);
             }
             addMessage('Initialized');
-            video.addEventListener('play', () => {
-                timerId = setInterval(doOCR, 1000);
-            });
-            video.addEventListener('pause', () => {
-                clearInterval(timerId);
-            });
-            addMessage('Now you can play the video. :)');
-            video.controls = true;
+            timerId = setInterval(doOCR, 1000);
         })();
     </script>
 
