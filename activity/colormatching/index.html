@@ -200,7 +200,7 @@
         let color5 = document.getElementById("color5");
 
 
-        const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
+        const colorName = ["red", "blue", "green", "yellow", "orange", "purple"];
         let colorArray = [[192, 0, 0], [0, 112, 192], [0, 176, 80], [255, 192, 0], [237, 125, 49], [104, 51, 156]];
 
         let targetColor = [[238, 61, 61], [71, 128, 208], [49, 165, 92], [247, 198, 61], [250, 136, 65], [89, 31, 141]];
@@ -211,7 +211,7 @@
 
         let givenColorIndex = Math.floor(Math.random() * 6);
         console.log("The given color is " + colors[givenColorIndex]);
-        color3.src = "./colordots/" + colors[givenColorIndex] + ".svg";
+        color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
 
         video.addEventListener('play', function () {
             const $this = this; //cache
@@ -240,7 +240,7 @@
                             check3.style.visibility = "hidden";
                             givenColorIndex = Math.floor(Math.random() * 6);
                             console.log("The given color is " + colors[givenColorIndex]);
-                            color3.src = "./colordots/" + colors[givenColorIndex] + ".svg";
+                            color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
                         }, 2000);
                         // TODO: Should be replaced with a function that moves to the next level
                     } else {
