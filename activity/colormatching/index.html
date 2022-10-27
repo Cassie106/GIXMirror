@@ -186,6 +186,12 @@
 
                     console.log(colors[2]);
 
+                    if (colors[2][0]>=colorLowerBound[givenColorIndex][0] && colors[2][0]<=colorUpperBound[givenColorIndex][0] && colors[2][1]>=colorLowerBound[givenColorIndex][1] && colors[2][1]<=colorUpperBound[givenColorIndex][1] && colors[2][2]>=colorLowerBound[givenColorIndex][2] && colors[2][2]<=colorUpperBound[givenColorIndex][2]) {
+                        check3.style.visibility = "visible";
+                    } else {
+                        check3.style.visibility = "hidden";
+                    }
+
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
