@@ -210,7 +210,7 @@
 
 
         let givenColorIndex = Math.floor(Math.random() * 6);
-        console.log("The given color is " + colors[givenColorIndex]);
+        console.log("The given color is " + colorName[givenColorIndex]);
         color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
 
         video.addEventListener('play', function () {
@@ -239,7 +239,7 @@
                             // New round after the sleep!
                             check3.style.visibility = "hidden";
                             givenColorIndex = Math.floor(Math.random() * 6);
-                            console.log("The given color is " + colors[givenColorIndex]);
+                            console.log("The given color is " + colorName[givenColorIndex]);
                             color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
                         }, 2000);
                         // TODO: Should be replaced with a function that moves to the next level
