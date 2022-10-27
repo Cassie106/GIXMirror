@@ -8,6 +8,7 @@
     <title>Color Matching</title>
     <style>
         body {
+
             margin: 0;
         }
 
@@ -34,18 +35,86 @@
             transform: rotateX(20deg) scaleX(-1) scaleY(1.5) scale(1.5);
         }
 
+        .colorWrapper {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .colorContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* height: 200px; */
+        }
+
+        .colorItem {
+            position: absolute;
+            display: inline-block;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+        }
+
     </style>
 </head>
 
 <body>
-    <!-- <h1>Webcam stream</h1> -->
+
     <div id="container">
         <div class="videoWrapper">
-            <!-- <iframe autoplay id="videoElement" allow="camera;"> -->
             <video autoplay id="videoElement"></video>
-            <!-- </iframe> -->
+        </div>
+
+        <div id="message">
+        </div>
+
+        <div class="colorWrapper">
+
+            <div class="colorContainer">
+                <div>
+                    <div>
+                        <img class=“colorItem” src="./colordots/empty.svg" id="color1" height="150px" width="150px">
+                    </div>
+                    <img class="checkmark" src="./colordots/checkmark.svg" id="check1" height="150px" width="150px">
+                </div>
+
+                <div>
+                    <div>
+                        <img class=“colorItem” src="./colordots/empty.svg" id="color2" height="150px" width="150px">
+                    </div>
+                    <img class="checkmark" src="./colordots/checkmark.svg" id="check2" height="150px" width="150px">
+                </div>
+
+                <div>
+                    <div>
+                        <img class=“colorItem” src="./colordots/empty.svg" id="color3" height="150px" width="150px">
+                    </div>
+                    <img class="checkmark" src="./colordots/checkmark.svg" id="check3" height="150px" width="150px">
+                </div>
+
+                <div>
+                    <div>
+                        <img class=“colorItem” src="./colordots/empty.svg" id="color4" height="150px" width="150px">
+                    </div>
+                    <img class="checkmark" src="./colordots/checkmark.svg" id="check4" height="150px" width="150px">
+                </div>
+
+                <div>
+                    <div>
+                        <img class=“colorItem” src="./colordots/empty.svg" id="color5" height="150px" width="150px">
+                    </div>
+                    <img class="checkmark" src="./colordots/checkmark.svg" id="check5" height="150px" width="150px">
+                </div>
+
+            </div>
         </div>
     </div>
+
+
 
 
     <script>
@@ -63,12 +132,21 @@
             console.log("getUserMedia not supported");
         }
 
-        // video.style.height = window.innerHeight + "px";
         video.style.width = window.innerWidth + "px";
 
         let videoWrapper = document.querySelector(".videoWrapper");
         videoWrapper.style.height = window.innerHeight + "px";
 
+
+        let color1 = document.querySelector("#color1");
+        let color2 = document.querySelector("#color2");
+        let color3 = document.querySelector("#color3");
+        let color4 = document.querySelector("#color4");
+        let color5 = document.querySelector("#color5");
+
+
+        const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
+        let colorArray = [[192,0,0],[0,112,192],[0,176,80],[255,192,0],[237,125,49],[104,51,156]];
     </script>
 
 

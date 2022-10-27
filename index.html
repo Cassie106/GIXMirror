@@ -229,9 +229,9 @@
 
         const doOCR = async () => {
             const c = document.createElement('canvas');
-            c.width = 640;
-            c.height = 480;
-            c.getContext('2d').drawImage(video, 0, 0, 240, 320);
+            c.width = 240;
+            c.height = 320;
+            c.getContext('2d').drawImage(ctx4.ImageData(0, 0, 240, 320), 0, 0, 240, 320);
 
             const { data: { text } } = await scheduler.addJob('recognize', c);
             recognizedText.innerHTML = text;
