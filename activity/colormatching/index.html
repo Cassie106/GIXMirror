@@ -235,13 +235,13 @@
                         check3.style.visibility = "visible";
                         console.log("The color is correct");
                         //one second delay after answer is correct
-                        sleep(2000).then(() => {
+                        setTimeout(function () {
                             // New round after the sleep!
                             check3.style.visibility = "hidden";
                             givenColorIndex = Math.floor(Math.random() * 6);
                             console.log("The given color is " + colors[givenColorIndex]);
                             color3.src = "./colordots/" + colors[givenColorIndex] + ".svg";
-                        });
+                        }, 2000);
                         // TODO: Should be replaced with a function that moves to the next level
                     } else {
                         check3.style.visibility = "hidden";
