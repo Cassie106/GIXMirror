@@ -58,11 +58,10 @@
             position: absolute;
             top: 0;
         }
-
     </style>
 </head>
 
-<body>
+<body onload="initialize()">
 
     <div id="container">
         <div class="videoWrapper">
@@ -118,6 +117,20 @@
 
 
     <script>
+        const check1 = document.getElementById('check1');
+        const check2 = document.getElementById('check2');
+        const check3 = document.getElementById('check3');
+        const check4 = document.getElementById('check4');
+        const check5 = document.getElementById('check5');
+
+        function initialize() {
+            check1.style.visibility = "hidden";
+            check2.style.visibility = "hidden";
+            check3.style.visibility = "hidden";
+            check4.style.visibility = "hidden";
+            check5.style.visibility = "hidden";
+        }
+
         let video = document.querySelector("#videoElement");
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -138,15 +151,78 @@
         videoWrapper.style.height = window.innerHeight + "px";
 
 
-        let color1 = document.querySelector("#color1");
-        let color2 = document.querySelector("#color2");
-        let color3 = document.querySelector("#color3");
-        let color4 = document.querySelector("#color4");
-        let color5 = document.querySelector("#color5");
+        let color1 = document.getElementById("color1");
+        let color2 = document.getElementById("color2");
+        let color3 = document.getElementById("color3");
+        let color4 = document.getElementById("color4");
+        let color5 = document.getElementById("color5");
 
 
         const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
-        let colorArray = [[192,0,0],[0,112,192],[0,176,80],[255,192,0],[237,125,49],[104,51,156]];
+        let colorArray = [[192, 0, 0], [0, 112, 192], [0, 176, 80], [255, 192, 0], [237, 125, 49], [104, 51, 156]];
+
+        let targetColor = [[238, 61, 61], [71, 128, 208], [49, 165, 92], [247, 198, 61], [250, 136, 65], [89, 31, 141]];
+
+        let colorLowerBound = [[190, 0, 0], [0, 110, 150], [0, 150, 80], [240, 150, 0], [237, 120, 50], [80, 25, 130]];
+        let colorUpperBound = [[255, 70, 70], [80, 150, 255], [60, 176, 100], [255, 255, 70], [255, 150, 70], [104, 51, 160]];
+
+
+        let givenColorIndex = Math.floor(Math.random() * 6);
+        console.log("The given color is " + colors[givenColorIndex]);
+        color3.src = "./colordots/" + colors[givenColorIndex] + ".svg";
+
+        video.addEventListener('play', function () {
+            const $this = this; //cache
+            (function loop() {
+                if (!$this.paused && !$this.ended) {
+
+                    const canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d')
+                    ctx.drawImage($this, 0, 0, 240, 320);
+
+                    let imageData = flipImage(ctx.getImageData(0, 0, 240, 320));
+
+                    let colors = getColors(imageData);
+
+                    console.log(colors[2]);
+
+                    setTimeout(loop, 1000 / 30); // drawing at 30fps
+                }
+            })();
+        }, 0);
+
+
+        function flipImage(imageData) {
+            // Traverse every row and flip the pixels
+            for (i = 0; i < imageData.height; i++) {
+                // We only need to do half of every row since we're flipping the halves
+                for (j = 0; j < imageData.width / 2; j++) {
+                    var index = (i * 4) * imageData.width + (j * 4);
+                    var mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+                    for (p = 0; p < 4; p++) {
+                        var temp = imageData.data[index + p];
+                        imageData.data[index + p] = imageData.data[mirrorIndex + p];
+                        imageData.data[mirrorIndex + p] = temp;
+                    }
+                }
+            }
+            return imageData;
+        }
+
+        function getColors(imageData) {
+            let colors = [];
+            let data = imageData.data;
+            for (let i = 2; i <= 6; i += 1) {
+                point = []
+                startIndex = (imageData.width * imageData.height / 2 + i * imageData.width / 8) * 4;
+                for (j = 0; j < 3; j++) {
+                    point.push(data[startIndex + j]);
+                }
+                colors.push(point);
+            }
+            return colors;
+        }
+
     </script>
 
 
