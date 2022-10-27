@@ -117,6 +117,8 @@
 
 
     <script>
+        const video = document.querySelector('video');
+
         const check1 = document.getElementById('check1');
         const check2 = document.getElementById('check2');
         const check3 = document.getElementById('check3');
@@ -131,19 +133,42 @@
             check5.style.visibility = "hidden";
         }
 
-        let video = document.querySelector("#videoElement");
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                    // video.srcObject = stream;
-                })
-                .catch(function (error) {
-                    console.log("sth went wrong");
-                })
-        } else {
-            console.log("getUserMedia not supported");
-        }
+        const constraints = {
+            audio: false,
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            }
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                const videoTracks = stream.getVideoTracks();
+                console.log('Got stream with constraints:', constraints);
+                console.log(`Using video device: ${videoTracks[0].label}`);
+                stream.onremovetrack = () => {
+                    console.log('Stream ended');
+                };
+                video.srcObject = stream;
+
+                let stream_settings = videoTracks[0].getSettings();
+                resText.textContent = `Camera Stream (${stream_settings.width}x${stream_settings.height})`;
+            })
+            .catch((error) => {
+                if (error.name === 'ConstraintNotSatisfiedError') {
+                    console.error(
+                        `The resolution ${constraints.video.width.exact}x${constraints.video.height.exact} px is not supported by your device.`
+                    );
+                } else if (error.name === 'PermissionDeniedError') {
+                    console.error(
+                        'Permissions have not been granted to use your camera and ' +
+                        'microphone, you need to allow the page access to your devices in ' +
+                        'order for the demo to work.'
+                    );
+                } else {
+                    console.error(`getUserMedia error: ${error.name}`, error);
+                }
+            });
 
         video.style.width = window.innerWidth + "px";
 
@@ -175,9 +200,12 @@
             const $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
-
                     const canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d')
+
+                    canvas.width = 240;
+                    canvas.height = 320;
+
+                    let ctx = canvas.getContext('2d');
                     ctx.drawImage($this, 0, 0, 240, 320);
 
                     let imageData = flipImage(ctx.getImageData(0, 0, 240, 320));
@@ -188,6 +216,7 @@
 
                     if (colors[2][0]>=colorLowerBound[givenColorIndex][0] && colors[2][0]<=colorUpperBound[givenColorIndex][0] && colors[2][1]>=colorLowerBound[givenColorIndex][1] && colors[2][1]<=colorUpperBound[givenColorIndex][1] && colors[2][2]>=colorLowerBound[givenColorIndex][2] && colors[2][2]<=colorUpperBound[givenColorIndex][2]) {
                         check3.style.visibility = "visible";
+                        console.log("The color is correct");
                     } else {
                         check3.style.visibility = "hidden";
                     }
