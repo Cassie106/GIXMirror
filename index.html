@@ -207,7 +207,7 @@
             let data = imageData.data;
             for (let i = 2; i <= 6; i += 1) {
                 point = []
-                startIndex = (imageData.width * imageData.height / 2 + i * imageData.width / 8) * 4;
+                startIndex = (imageData.width * imageData.height / 3 + i * imageData.width / 8) * 4;
                 for (j = 0; j < 3; j++) {
                     point.push(data[startIndex + j]);
                 }
