@@ -66,10 +66,23 @@
             bottom: 20px;
         }
 
-        .btnImg {
+        .selectList {
             position: absolute;
             left: 20px;
             top: 20px;
+        }
+
+        .select {
+            background-color: #e7e7e7;
+            border: none;
+            color: black;
+            padding: 15px;
+            /* text-align: center; */
+            /* text-decoration: none; */
+            display: inline-block;
+            /* font-size: 16px; */
+            border-radius: 10px;
+            /* margin: 20px 2px; */
         }
     </style>
 </head>
@@ -84,22 +97,50 @@
         </div>
 
         <div class="drawWrapper">
-            <img src="./draws/dog.svg" id="draw">
+            <img src="" id="draw">
         </div>
 
-        <div class="btnImg">
-            <button class="button btnImg1" onclick="changeImg('./draws/house.svg')">house</button>
-            <button class="button btnImg2" onclick="changeImg('./draws/cat.svg')">cat</button>
-            <button class="button btnImg3" onclick="changeImg('./draws/dog.svg')">dog</button>
-            <button class="button btnImg4" onclick="changeImg('./draws/pear.svg')">pear</button>
-            <button class="button btnImg5" onclick="changeImg('./draws/flower.svg')">flower</button>
-            <button class="button btnImg6" onclick="changeImg('./draws/challenge.svg')">challenge</button>
+        <div class="selectList">
+            <div>
+                <h2>EASY</h2>
+                <select class="select" onchange="document.getElementById('draw').src = this.value">
+                    <option selected disabled>Pick a drawing</option>
+                    <option value="./drawings/square.svg">square</option>
+                    <option value="./drawings/pentagram.svg">pentagram</option>
+                    <option value="./drawings/hexagon.svg">hexagon</option>
+                    <option value="./drawings/circle.svg">circle</option>
+                    <option value="./drawings/triangle.svg">triangle</option>
+                </select>
+            </div>
+            <div>
+                <h2>MEDIUM</h2>
+                <select class="select" onchange="document.getElementById('draw').src = this.value">
+                    <option selected disabled>Pick a drawing</option>
+                    <option value="./drawings/house.svg">house</option>
+                    <option value="./drawings/cat.svg">cat</option>
+                    <option value="./drawings/dog.svg">dog</option>
+                    <option value="./drawings/fishing.svg">fishing</option>
+                    <option value="./drawings/pear.svg">pear</option>
+                </select>
+            </div>
+            <div>
+                <h2>HARD</h2>
+                <select class="select" onchange="document.getElementById('draw').src = this.value">
+                    <option selected disabled>Pick a drawing</option>
+                    <option value='./drawings/seattle.svg'>seattle</option>
+                    <option value='./drawings/newyork.svg'>new york</option>
+                    <option value='./drawings/papapishuclumber.svg'>papapishu clumber</option>
+                    <option value='./drawings/bighouse.svg'>big house</option>
+                </select>
+            </div>
         </div>
         <button class="button btnSave" onclick="saveImg()">Save</button>
     </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         let video = document.querySelector("#videoElement");
