@@ -90,6 +90,7 @@
         </div>
     </div>
 
+    <script src="./node_modules/perspectivejs/src/perspective.js"></script>
     <script>
         // Put variables in global scope to make them available to the browser console.
         const video = document.querySelector('video');
@@ -160,6 +161,9 @@
 
                     ctx2.putImageData(imageData, 0, 0);
 
+                    var image = c2.toDataURL();
+                    console.log(typeof image);
+
 
                     ctx3.putImageData(imageData, 0, 0);
                     let colors = getColors(imageData);
@@ -202,6 +206,18 @@
             return imageData;
         }
 
+        function drawProjImg(canvas, imageData, x0, y0, x1, y1, x2, y2, x3, y3) {
+            var ctx = canvas.getContext('2d');
+            var p = new Perspective(ctx, imageData);
+            p.draw([
+                [x0, y0],
+                [x1, y1],
+                [x2, y2],
+                [x3, y3]
+            ]);
+        }
+
+
         function getColors(imageData) {
             let colors = [];
             let data = imageData.data;
@@ -231,7 +247,7 @@
             const c = document.createElement('canvas');
             c.width = 240;
             c.height = 320;
-            c.getContext('2d').drawImage(ctx4.ImageData(0, 0, 240, 320), 0, 0, 240, 320);
+            c.getContext('2d').drawImage(ctx4, imageData(0, 0, 240, 320), 0, 0, 240, 320);
 
             const { data: { text } } = await scheduler.addJob('recognize', c);
             recognizedText.innerHTML = text;
@@ -254,6 +270,23 @@
         })();
     </script>
 
+<script>
+    // var canvas = document.getElementById("c2");
+    // var image = new Image();
+    // image.onload = function() {
+    //     canvas.width = image.width;
+    //     canvas.height = image.height;
+    //     var ctx = canvas.getContext("2d");
+    //     var p = new Perspective(ctx, image);
+    //     p.draw([
+    //             [30, 30],
+    //             [image.width + 50, 50],
+    //             [image.width - 70, image.height - 30],
+    //             [10, image.height]
+    //     ]);
+    // }
+    // image.src = "firefox.jpg";
+</script>
 
 </body>
 

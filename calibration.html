@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>Perspective.js demo</title>
+    <style>
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            /* overflow: hidden; */
+        }
+
+        canvas {
+            /* border: gray solid 1px; */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="./node_modules/perspectivejs/src/perspective.js"></script>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        var tempCanvas = document.createElement("canvas");
+        var tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.id = "tempCanvas";
+        // tempCanvas.width = $this.videoWidth;
+        // tempCanvas.height = $this.videoHeight;
+        // tempCtx.drawImage($this, 0, 0, $this.videoWidth, $this.videoWidth);
+        tempCanvas.width = window.innerWidth;
+        tempCanvas.height = window.innerHeight;
+        var image = new Image();
+        var resizedImage = new Image();
+        // image.src = 
+        image.onload = function () {
+            tempCtx.drawImage(image, 0, 0, window.innerWidth, window.innerHeight);
+            resizedImage.src = tempCanvas.toDataURL();
+            // ctx.drawImage(resizedImage, 0, 0, window.innerWidth, window.innerHeight);
+            var p = new Perspective(ctx, resizedImage);
+            var lr_dis = 500;
+            var tb_dis = 900;
+            p.draw([
+                [0, 0],
+                [resizedImage.width, 0],
+                [resizedImage.width + lr_dis, resizedImage.height + tb_dis],
+                [0-lr_dis, resizedImage.height + tb_dis]
+            ]);
+        }
+        image.src = "calibration.jpg";
+    </script>
+</body>
+
+</html>

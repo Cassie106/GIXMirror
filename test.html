@@ -1,0 +1,110 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>Perspective.js demo</title>
+    <style>
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden;
+        }
+
+        canvas {
+            /* border: gray solid 10px; */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <!-- <video id="video" autoplay></video> -->
+    <script src="./node_modules/perspectivejs/src/perspective.js"></script>
+
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var video = document.createElement("VIDEO");
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const constraints = {
+            audio: false,
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            }
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                const videoTracks = stream.getVideoTracks();
+                console.log('Got stream with constraints:', constraints);
+                console.log(`Using video device: ${videoTracks[0].label}`);
+                stream.onremovetrack = () => {
+                    console.log('Stream ended');
+                };
+                video.srcObject = stream;
+                video.play();
+                let stream_settings = videoTracks[0].getSettings();
+            })
+            .catch((error) => {
+                if (error.name === 'ConstraintNotSatisfiedError') {
+                    console.error(
+                        `The resolution ${constraints.video.width.exact}x${constraints.video.height.exact} px is not supported by your device.`
+                    );
+                } else if (error.name === 'PermissionDeniedError') {
+                    console.error(
+                        'Permissions have not been granted to use your camera and ' +
+                        'microphone, you need to allow the page access to your devices in ' +
+                        'order for the demo to work.'
+                    );
+                } else {
+                    console.error(`getUserMedia error: ${error.name}`, error);
+                }
+            });
+
+
+        video.addEventListener('play', function () {
+            const $this = this; //cache
+            (function loop() {
+                if (!$this.paused && !$this.ended) {
+                    var tempCanvas = document.createElement("canvas");
+                    var tempCtx = tempCanvas.getContext('2d');
+                    tempCanvas.id = "tempCanvas";
+                    // tempCanvas.width = $this.videoWidth;
+                    // tempCanvas.height = $this.videoHeight;
+                    // tempCtx.drawImage($this, 0, 0, $this.videoWidth, $this.videoWidth);
+                    tempCanvas.width = window.innerWidth;
+                    tempCanvas.height = window.innerHeight;
+                    tempCtx.drawImage($this, 0, 0, window.innerWidth, window.innerHeight);
+                    var image = new Image();
+                    image.id = "pic";
+                    image.src = tempCanvas.toDataURL();
+
+                    image.onload = function () {
+                        // canvas.width = image.width;
+                        // canvas.height = image.height;
+                        // var ctx = canvas.getContext("2d");
+                        var p = new Perspective(ctx, image);
+                        p.draw([
+                            [0, 0],
+                            [image.width - 0, 0],
+                            [image.width + 0, image.height + 0],
+                            [0, image.height + 0]
+                        ]);
+                    }
+                    setTimeout(loop, 1000 / 30); // drawing at 30fps
+                }
+            })();
+        }, 0);
+
+
+
+    </script>
+</body>
+
+</html>
