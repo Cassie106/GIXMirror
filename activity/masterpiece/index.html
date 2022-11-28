@@ -66,7 +66,7 @@
             bottom: 20px;
         }
 
-        .selectList {
+        .selectBlock {
             position: absolute;
             left: 20px;
             top: 20px;
@@ -77,12 +77,15 @@
             border: none;
             color: black;
             padding: 15px;
-            /* text-align: center; */
-            /* text-decoration: none; */
+            font-size: 20px;
             display: inline-block;
-            /* font-size: 16px; */
             border-radius: 10px;
-            /* margin: 20px 2px; */
+        }
+
+        #header {
+            font-size: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -100,47 +103,38 @@
             <img src="" id="draw">
         </div>
 
-        <div class="selectList">
-            <div>
-                <h2>EASY</h2>
-                <select class="select" onchange="document.getElementById('draw').src = this.value">
-                    <option selected disabled>Pick a drawing</option>
+        <div class="selectBlock">
+            <div id="header">Choose a drawing to trace:</div>
+
+            <select class="select" onchange="document.getElementById('draw').src = this.value">
+                <option selected disabled>Pick a drawing</option>
+                <optgroup label="EASY">
                     <option value="./drawings/square.svg">square</option>
                     <option value="./drawings/pentagram.svg">pentagram</option>
                     <option value="./drawings/hexagon.svg">hexagon</option>
                     <option value="./drawings/circle.svg">circle</option>
                     <option value="./drawings/triangle.svg">triangle</option>
-                </select>
-            </div>
-            <div>
-                <h2>MEDIUM</h2>
-                <select class="select" onchange="document.getElementById('draw').src = this.value">
-                    <option selected disabled>Pick a drawing</option>
+                </optgroup>
+                <optgroup label="MEDIUM">
                     <option value="./drawings/house.svg">house</option>
                     <option value="./drawings/cat.svg">cat</option>
                     <option value="./drawings/dog.svg">dog</option>
                     <option value="./drawings/fishing.svg">fishing</option>
                     <option value="./drawings/pear.svg">pear</option>
-                </select>
-            </div>
-            <div>
-                <h2>HARD</h2>
-                <select class="select" onchange="document.getElementById('draw').src = this.value">
-                    <option selected disabled>Pick a drawing</option>
+                    <option value="./drawings/car.svg">car</option>
+                </optgroup>
+                <optgroup label="HARD">
                     <option value='./drawings/seattle.svg'>seattle</option>
-                    <option value='./drawings/newyork.svg'>new york</option>
+                    <option value='./drawings/flower.svg'>flower</option>
                     <option value='./drawings/papapishuclumber.svg'>papapishu clumber</option>
                     <option value='./drawings/bighouse.svg'>big house</option>
-                </select>
-            </div>
+                </optgroup>
+            </select>
         </div>
         <button class="button btnSave" onclick="saveImg()">Save</button>
     </div>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../../node_modules/perspectivejs/src/perspective.js"></script>
 
     <script>
         let video = document.querySelector("#videoElement");
@@ -148,7 +142,6 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     video.srcObject = stream;
-                    // video.srcObject = stream;
                 })
                 .catch(function (error) {
                     console.log("sth went wrong");
@@ -172,8 +165,37 @@
 
         // function to save image
         function saveImg() {
-            html2pdf(video);
+            var tempCanvas = document.createElement("canvas");
+            var finalCanvas = document.createElement("canvas");
+            var tempCtx = tempCanvas.getContext('2d');
+            var finalCtx = finalCanvas.getContext('2d');
+            finalCanvas.id = "canvas";
+            tempCanvas.width = window.innerWidth;
+            tempCanvas.height = window.innerHeight;
+            tempCtx.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
+
+            var image = new Image();
+            var resizedImage = new Image();
+            // image.onload = function () {
+            resizedImage.src = tempCanvas.toDataURL();
+            // ctx.drawImage(resizedImage, 0, 0, window.innerWidth, window.innerHeight);
+            var p = new Perspective(finalCtx, resizedImage);
+            var lr_dis = 500;
+            var tb_dis = 900;
+            p.draw([
+                [0, 0],
+                [resizedImage.width, 0],
+                [resizedImage.width + lr_dis, resizedImage.height + tb_dis],
+                [0 - lr_dis, resizedImage.height + tb_dis]
+            ]);
+            // }
+
+            var image = finalCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+            window.location.href = image;
+
+
         }
+
 
     </script>
 
