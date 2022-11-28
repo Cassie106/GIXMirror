@@ -18,7 +18,7 @@
 
 
         .videoWrapper {
-            perspective: 20cm;
+            perspective: 55cm;
             /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
             top: 0;
             left: 0;
@@ -31,8 +31,8 @@
 
         video {
             position: relative;
-            top: -10%;
-            transform: rotateX(20deg) scaleX(-1) scaleY(1.5) scale(1.5);
+            top: 30%;
+            transform: rotateX(50deg) scaleX(-1) scaleY(2.2) scale(1.8);
         }
 
         .colorWrapper {
@@ -203,15 +203,17 @@
         const colorName = ["red", "blue", "green", "yellow", "orange", "purple"];
         let colorArray = [[192, 0, 0], [0, 112, 192], [0, 176, 80], [255, 192, 0], [237, 125, 49], [104, 51, 156]];
 
-        let targetColor = [[238, 61, 61], [71, 128, 208], [49, 165, 92], [247, 198, 61], [250, 136, 65], [89, 31, 141]];
+        // let targetColor = [[238, 61, 61], [71, 128, 208], [49, 165, 92], [247, 198, 61], [250, 136, 65], [89, 31, 141]];
 
-        let colorLowerBound = [[190, 0, 0], [0, 110, 150], [0, 150, 80], [240, 150, 0], [237, 120, 50], [80, 25, 130]];
-        let colorUpperBound = [[255, 70, 70], [80, 150, 255], [60, 176, 100], [255, 255, 70], [255, 150, 70], [104, 51, 160]];
+        // let colorLowerBound = [[190, 0, 0], [0, 110, 150], [0, 150, 80], [240, 150, 0], [237, 120, 50], [80, 25, 130]];
+        // let colorUpperBound = [[255, 70, 70], [80, 150, 255], [60, 176, 100], [255, 255, 70], [255, 150, 70], [104, 51, 160]];
 
 
         let givenColorIndex = Math.floor(Math.random() * 6);
         console.log("The given color is " + colorName[givenColorIndex]);
         color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
+
+        var frameCounter = 0;
 
         video.addEventListener('play', function () {
             const $this = this; //cache
@@ -231,21 +233,49 @@
 
                     // console.log(colors[2]);
 
-                    if (colors[2][0] >= colorLowerBound[givenColorIndex][0] && colors[2][0] <= colorUpperBound[givenColorIndex][0] && colors[2][1] >= colorLowerBound[givenColorIndex][1] && colors[2][1] <= colorUpperBound[givenColorIndex][1] && colors[2][2] >= colorLowerBound[givenColorIndex][2] && colors[2][2] <= colorUpperBound[givenColorIndex][2]) {
-                        check3.style.visibility = "visible";
-                        console.log("The color is correct");
-                        //one second delay after answer is correct
-                        setTimeout(function () {
-                            // New round after the sleep!
-                            check3.style.visibility = "hidden";
-                            givenColorIndex = Math.floor(Math.random() * 6);
-                            console.log("The given color is " + colorName[givenColorIndex]);
-                            color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
-                        }, 2000);
-                        // TODO: Should be replaced with a function that moves to the next level
+                    var colorDistanceDeltaE = Math.sqrt(
+                        Math.pow(colors[2][0] - colorArray[givenColorIndex][0], 2) +
+                        Math.pow(colors[2][1] - colorArray[givenColorIndex][1], 2) +
+                        Math.pow(colors[2][2] - colorArray[givenColorIndex][2], 2)
+                    );
+
+                    console.log(colorDistanceDeltaE);
+
+                    if (colorDistanceDeltaE < 50) {
+                        if (frameCounter > 30) {
+                            check3.style.visibility = "visible";
+                            console.log("You got it!");
+                            frameCounter++;
+                            if (frameCounter > 60) {
+                                check3.style.visibility = "hidden";
+                                givenColorIndex = Math.floor(Math.random() * 6);
+        console.log("The given color is " + colorName[givenColorIndex]);
+        color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
+                            }
+                        } else {
+                            frameCounter++;
+                        }
                     } else {
+                        frameCounter = 0;
                         check3.style.visibility = "hidden";
                     }
+                    
+
+                    // if (colors[2][0] >= colorLowerBound[givenColorIndex][0] && colors[2][0] <= colorUpperBound[givenColorIndex][0] && colors[2][1] >= colorLowerBound[givenColorIndex][1] && colors[2][1] <= colorUpperBound[givenColorIndex][1] && colors[2][2] >= colorLowerBound[givenColorIndex][2] && colors[2][2] <= colorUpperBound[givenColorIndex][2]) {
+                    //     check3.style.visibility = "visible";
+                    //     console.log("The color is correct");
+                    //     //one second delay after answer is correct
+                    //     setTimeout(function () {
+                    //         // New round after the sleep!
+                    //         check3.style.visibility = "hidden";
+                    //         givenColorIndex = Math.floor(Math.random() * 6);
+                    //         console.log("The given color is " + colorName[givenColorIndex]);
+                    //         color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
+                    //     }, 2000);
+                    //     // TODO: Should be replaced with a function that moves to the next level
+                    // } else {
+                    //     check3.style.visibility = "hidden";
+                    // }
 
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
