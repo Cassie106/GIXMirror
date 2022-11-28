@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>Color Matching</title>
     <style>
         body {
@@ -68,30 +68,28 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            font-size: 50px;
+            /* font-size: 50px;
             color: grey;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, sans-serif; */
         }
 
         #score {
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 50px;
+            /* font-size: 50px;
             color: grey;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, sans-serif; */
         }
 
         #hint {
             position: absolute;
-            bottom: 200px;
-            font-size: 60px;
-            color: grey;
-            font-family: Arial, Helvetica, sans-serif;
-            margin: auto;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
+            font-size: 50px;
         }
-
     </style>
 </head>
 
@@ -163,11 +161,11 @@
                 <img class=“placeLocation” src="./colordots/empty.svg" height="146px">
             </div>
 
-            
+
         </div>
-        <div id="timer">time:0s</div>
-        <div id="score">score:0</div>
-        <div id="hint">Place the displayed color on the correct position</div>
+        <h2 id="timer">time:0s</h2>
+        <h2 id="score">score:0</h2>
+        <h2 id="hint">Place the displayed color on the correct position</h2>
     </div>
 
 
@@ -257,15 +255,15 @@
             (function loop() {
                 if (!$this.paused && !$this.ended) {
 
-                    if (frameCounter == 30){
+                    if (frameCounter == 30) {
                         timer++;
                         frameCounter = 0;
-                        document.getElementById("timer").innerHTML = "time:"+timer + "s";
+                        document.getElementById("timer").innerHTML = "time:" + timer + "s";
                     } else {
                         frameCounter++;
                     }
 
-                    if (timer == 60){
+                    if (timer == 60) {
                         alert("Game Over! Your score is " + score);
                         // location.reload();
                     }
@@ -296,7 +294,7 @@
                                 console.log("The given color is " + colorName[givenColorIndex]);
                                 color3.src = "./colordots/" + colorName[givenColorIndex] + ".svg";
                                 score++;
-                                document.getElementById("score").innerHTML = "score:"+score;
+                                document.getElementById("score").innerHTML = "score:" + score;
                             }
                         } else {
                             frameCounterMatch++;
