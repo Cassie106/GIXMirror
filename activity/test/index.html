@@ -17,7 +17,7 @@
 
 
         .videoWrapper {
-            perspective: 20cm;
+            perspective: 55cm;
             /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
             top: 0;
             left: 0;
@@ -30,20 +30,17 @@
 
         video {
             position: relative;
-            top: -10%;
-            transform: rotateX(20deg) scaleX(-1) scaleY(1.5) scale(1.5);
+            top: 30%;
+            transform: rotateX(50deg) scaleX(-1) scaleY(2.2) scale(1.8);
         }
 
     </style>
 </head>
 
 <body>
-    <!-- <h1>Webcam stream</h1> -->
     <div id="container">
         <div class="videoWrapper">
-            <!-- <iframe autoplay id="videoElement" allow="camera;"> -->
             <video autoplay id="videoElement"></video>
-            <!-- </iframe> -->
         </div>
     </div>
 
@@ -54,7 +51,6 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     video.srcObject = stream;
-                    // video.srcObject = stream;
                 })
                 .catch(function (error) {
                     console.log("sth went wrong");
@@ -63,7 +59,6 @@
             console.log("getUserMedia not supported");
         }
 
-        // video.style.height = window.innerHeight + "px";
         video.style.width = window.innerWidth + "px";
 
         let videoWrapper = document.querySelector(".videoWrapper");
