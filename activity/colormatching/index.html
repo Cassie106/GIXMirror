@@ -264,7 +264,15 @@
                     }
 
                     if (timer == 30) {
-                        alert("Game Over! Your score is " + score);
+                        if (confirm("Activity Accomplished! Your score is " + score + "\nDo you want to try again?") == true) {
+                            timer = 0;
+                            score = 0;
+                            document.getElementById("score").innerHTML = "score:" + score;
+                            location.reload();
+                        } else {
+                            history.back()
+                        }
+             
                         // location.reload();
                     }
 
