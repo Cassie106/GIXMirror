@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Vision</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #container {
+            background-size: cover;
+        }
+
+
+        .videoWrapper {
+            perspective: 55cm;
+            /* A <length> giving the distance from the user(our case: camera) to the z=0 plane (our case: table through reflection). It is used to apply a perspective transform to the children of the element. */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            overflow: hidden;
+
+        }
+
+        .button {
+            background-color: #e7e7e7;
+            /* Green */
+            border: none;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 10px;
+            margin: 20px 2px;
+
+        }
+
+        #btnGen {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        video {
+            position: relative;
+            top: 30%;
+            transform: rotateX(50deg) scaleX(-1) scaleY(2.2) scale(1.8);
+        }
+
+        #generatedImg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-height: 80%;
+        }
+
+        #progress {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+        }
+
+        #btnGroup {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="videoWrapper">
+            <video autoplay id="videoElement"></video>
+        </div>
+    </div>
+    <img id="generatedImg" />
+    <!-- <input id="text_prompt"> -->
+    <progress id="progress" value="0" max="100"></progress>
+    <button id="btnGen" class="button" onclick="generateImg()">Generate</button>
+    <div id="btnGroup">
+        <button class="button" onclick="clearImg()">Clear Image</button>
+        <button class="button" onclick="shareImg()">Share Image</button>
+    </div>
+
+</body>
+
+<script src='https://unpkg.com/tesseract.js@3.0.3/dist/tesseract.min.js'></script>
+<script>
+    let img = document.querySelector("img");
+    let btnGen = document.getElementById("btnGen");
+    let progress = document.querySelector("progress");
+    let btnGroup = document.querySelector("#btnGroup");
+    btnGroup.style.visibility = "hidden";
+    progress.style.visibility = "hidden";
+
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    function constructPostBody(prompt) {
+        return {
+            "id": "test",
+            "apiKey": "106214f1-cf44-48ce-aadf-5d57498598ae",
+            "modelKey": "4e098252-bf07-4c47-b664-9080e57d6cbd",
+            "modelInputs": {
+                "prompt": prompt,
+                "num_inference_steps": 50,
+                "guidance_scale": 9,
+                "height": 512,
+                "width": 512,
+            }
+        };
+    }
+
+    async function generateImg() {
+        // button.sytyle.visibility = "hidden";
+        progress.style.visibility = "visible";
+        btnGen.style.visibility = "hidden";
+        img.style.visibility = "visible";
+        img.src = "./loading.gif";
+        progress.value = 0;
+        setTimeout(() => {
+            doOCR().then((prompt) => {
+                prompt = prompt.replace(/\n/g, " ");
+                document.querySelector("button").disabled = true;
+                var tasks = Array(100).fill(0).map(wait);
+                progressPromise(tasks, update).then(function (results) {
+                    console.log('done!');
+                });
+                let postBody = {};
+                // let prompt = document.querySelector("#text_prompt").value;
+                postBody = constructPostBody(prompt);
+                postData('https://api.banana.dev/start/v4/', postBody)
+                    .then((data) => {
+                        document.querySelector("button").disabled = false;
+                        console.log(data);
+                        imageData = data.modelOutputs[0].image_base64;
+                        img.src = "data:image/jpeg;base64, " + imageData;
+                        btnGroup.style.visibility = "visible";
+                        progress.style.visibility = "hidden";
+                    });
+            });
+        }, 2000);
+
+    }
+
+    function progressPromise(promises, tickCallback) {
+        var len = promises.length;
+        var progress = 0;
+
+        function tick(promise) {
+            promise.then(function () {
+                progress++;
+                tickCallback(progress, len);
+            });
+            return promise;
+        }
+
+        return Promise.all(promises.map(tick));
+    }
+
+    // generate a promise that resolves after up to 2 seconds.
+    function wait() {
+        return new Promise(function (done) {
+            setTimeout(done, Math.random() * 20000);
+        });
+    }
+
+    var progressEl = document.querySelector('progress');
+
+    function update(completed, total) {
+        progressEl.value = Math.round(completed / total * 100);
+    }
+
+    let video = document.querySelector("#videoElement");
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.log("sth went wrong");
+            })
+    } else {
+        console.log("getUserMedia not supported");
+    }
+
+    video.style.width = window.innerWidth + "px";
+
+    let videoWrapper = document.querySelector(".videoWrapper");
+    videoWrapper.style.height = window.innerHeight + "px";
+
+
+    function flipImage(imageData) {
+        // Traverse every row and flip the pixels
+        for (i = 0; i < imageData.height; i++) {
+            // We only need to do half of every row since we're flipping the halves
+            for (j = 0; j < imageData.width / 2; j++) {
+                var index = (i * 4) * imageData.width + (j * 4);
+                var mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+                for (p = 0; p < 4; p++) {
+                    var temp = imageData.data[index + p];
+                    imageData.data[index + p] = imageData.data[mirrorIndex + p];
+                    imageData.data[mirrorIndex + p] = temp;
+                }
+            }
+        }
+        return imageData;
+    }
+
+
+    const { createWorker, createScheduler } = Tesseract;
+    const scheduler = createScheduler();
+    let timerId = null;
+
+    const doOCR = async () => {
+        const c = document.createElement('canvas');
+        c.width = 240;
+        c.height = 320;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(video, 0, 0, 240, 320);
+        let imageData = flipImage(ctx.getImageData(0, 0, 240, 320));
+        ctx.putImageData(imageData, 0, 0);
+        let recognizeResult = await scheduler.addJob('recognize', c);
+
+        console.log(recognizeResult.data.text);
+        return recognizeResult.data.text;
+        // return recognizeResult.data.text;
+        // recognizedText.innerHTML = recognizeResult.data.text;
+    };
+
+    (async () => {
+        // addMessage('Initializing Tesseract.js ...');
+        console.log('Initializing Tesseract.js ...');
+        // for (let i = 0; i < 4; i++) {
+        const worker = createWorker();
+        await worker.load();
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
+        await worker.setParameters({
+            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ',
+        });
+        scheduler.addWorker(worker);
+        // }
+        // addMessage('Initialized');
+        console.log('Initialized');
+        // timerId = setInterval(doOCR, 1000);
+    })();
+
+    function clearImg() {
+        img.style.visibility = "hidden";
+        btnGroup.style.visibility = "hidden";
+        btnGen.style.visibility = "visible";
+    }
+
+    async function shareImg() {
+
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        canvas.height = img.naturalHeight;
+        canvas.width = img.naturalWidth;
+        context.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL('image/jpeg');
+        var blob = await fetch(dataURL).then(r => r.blob());
+        const filesArray = [
+            new File(
+                [blob],
+                'AI generated image.jepg',
+                {
+                    type: blob.type,
+                    lastModified: new Date().getTime()
+                }
+            )
+        ];
+        const shareData = {
+            files: filesArray,
+        };
+        navigator.share(shareData);
+    }
+</script>
+
+</html>

@@ -45,8 +45,8 @@
         <button class="button" onClick="window.location.href='./activity/masterpiece';">
             Masterpiece
         </button>
-        <button class="button" onClick="window.location.href='./activity/artsocial';">
-            ArtSocial
+        <button class="button" onClick="window.location.href='./activity/magicvision';">
+            Magic Vision
         </button>
         <button class="button" onClick="window.location.href='./activity/colormatching';">
             Color Matching
@@ -163,7 +163,6 @@
                     ctx2.putImageData(imageData, 0, 0);
 
                     var image = c2.toDataURL();
-                    console.log(typeof image);
 
 
                     ctx3.putImageData(imageData, 0, 0);
@@ -248,10 +247,14 @@
             const c = document.createElement('canvas');
             c.width = 240;
             c.height = 320;
-            c.getContext('2d').drawImage(ctx4, imageData(0, 0, 240, 320), 0, 0, 240, 320);
+            const ctx = c.getContext('2d');
+            ctx.drawImage(video, 0, 0, 240, 320);
+            let imageData = flipImage(ctx.getImageData(0, 0, 240, 320));
+            ctx.putImageData(imageData, 0, 0);
 
-            const { data: { text } } = await scheduler.addJob('recognize', c);
-            recognizedText.innerHTML = text;
+            let recognizeResult = await scheduler.addJob('recognize', c);
+            console.log(recognizeResult.data.text);
+            recognizedText.innerHTML = recognizeResult.data.text;
         };
 
         (async () => {
@@ -262,7 +265,7 @@
                 await worker.loadLanguage('eng');
                 await worker.initialize('eng');
                 await worker.setParameters({
-                    // tessedit_char_whitelist: '0123456789',
+                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ',
                 });
                 scheduler.addWorker(worker);
             }

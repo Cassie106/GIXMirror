@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@banana-dev/banana-dev": "^4.0.0",
     "http-server": "^14.1.1",
     "perspectivejs": "^1.0.3"
   }
