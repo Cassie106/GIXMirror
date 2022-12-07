@@ -1,4 +1,4 @@
-# CAFE System Prototype
+# CAFE Activity Prototype
 
 ![logo](./doc_assets/unnamed.png)
 
