@@ -27,6 +27,34 @@ The assembly process is shown below:
 
 This project has no specified system dependencies for deployment. It can be deployed on GitHub Page or any other static hosting service.
 
+### Applying for API keys
+
+In order to have a running backend service for text2image, you need to apply for a api access key and model key.
+
+The Current implementation is using Stable Diffusion Model with Banana API. You can apply for the key [here](https://app.banana.dev/)
+
+After you get the key, you need to change the api key and model key in [activity/magicvision/index.html](./activity/magicvision/index.html)
+
+
+```javascript
+
+function constructPostBody(prompt) {
+        return {
+            "id": "test",
+            "apiKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // your api key
+            "modelKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // your model key
+            "modelInputs": {
+                "prompt": prompt,
+                "num_inference_steps": 50,
+                "guidance_scale": 9,
+                "height": 512,
+                "width": 512,
+            }
+        };
+    }
+    
+```
+
 ### Installing
 
 After cloning the repository. In the project directory, you can run to install all the dependencies:
